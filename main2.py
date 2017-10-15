@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from graph import Graph
+from solution import Solution
+from collections import defaultdict
+
+import local_search
 import sys
 
 ##############################################
@@ -49,16 +53,47 @@ def readDataFile(filename):
 
 
 ##############################################
-# MAIN        
+# MAIN
 
 def main(argv):
+
     # nodes, opt_sol, connections = readDataFile("set1/g1.rud")
     nodes, opt_sol, connections = readDataFile("example_set/e1.rud")
+
+    print '\n'
+    print '-- graph'
     print("nodes: "+str(nodes))
     print("optimal solution: "+str(opt_sol))
     g = Graph(connections)
+
     # pprint(g._graph)
     print (g._graph)
+    print '--\n'    
+
+    # -- manual graph build
+    # connections = [('A', 'B', 10), ('B', 'C', 3), ('B', 'D', 2), ('C', 'D', 8), ('E', 'F', 30), ('F', 'C', 20)]
+
+    # weights = defaultdict(set)
+    # weights[10] = ('A', 'B')
+    # weights[3] = ('B', 'C')
+    # weights[2] = ('B', 'D')
+    # weights[8] = ('C', 'D') 
+    # weights[30] = ('E', 'F')
+    # weights[20] = ('F' , 'C')
+    # --
+
+    # sol_state = []
+
+    # manual initial solution
+    solution = Solution({1}, {2, 3, 4, 5, 6}, 15)
+
+    print '-- init solution:'
+    print solution
+    print 'best: ' + str(solution._value)
+    print '--\n'
+
+    # local_search.first_best(g, solution)
+    local_search.best_best(g, solution)
 
 if __name__ == "__main__":
     main(sys.argv)
