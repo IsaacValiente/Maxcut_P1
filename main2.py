@@ -3,7 +3,7 @@
 from graph import Graph
 from solution import Solution
 from collections import defaultdict
-from local_search import generate_initial
+from local_search import generate_initial, totalCutValue
 
 import local_search
 import sys
@@ -94,6 +94,8 @@ def main(argv):
     #GREEDY
     initial_solution = generate_initial(g)
     print("INITIAL SOLUTION: "+str(initial_solution))
+    totalCut= totalCutValue(g,initial_solution[0],initial_solution[1])
+    print("totalCutValue: "+str(totalCut))
 
     # initial solutions list
     initSolutions = [solution]
