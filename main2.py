@@ -59,6 +59,28 @@ def readDataFile(filename):
 
 def main(argv):
 
+    # check command usage
+    if len(argv) < 2:
+        print 'usage error: improvement type required'
+        print '1: first best\n2: best best\n3: percentage best'
+        return
+    else:
+        if argv[1] == '1':
+            if len(argv) < 3:
+                print 'usage error: max iterarion number required'
+                return
+            else:
+                iterations = int(argv[2])
+        elif argv[1] == '3':
+            if len(argv) < 3:
+                print 'usage error: percentage required'
+                return
+            else:
+                percentage = int(argv[2])
+        elif int(argv[1]) > 3:
+            print 'usage error: improvement type ' + argv[1] + ' not found'
+            return
+
     # nodes, opt_sol, connections = readDataFile("set1/g1.rud")
     nodes, opt_sol, connections = readDataFile("example_set/e1.rud")
 
@@ -67,38 +89,40 @@ def main(argv):
     print("nodes: "+str(nodes))
     print("optimal solution: "+str(opt_sol))
     g = Graph(connections)
-    initial_solution = generate_initial(g._graph,True)
+    #RANDOM
+    initial_solution = generate_initial(g,True)
+    #GREEDY
+    initial_solution = generate_initial(g)
+    print("INITIAL SOLUTION: "+str(initial_solution))
 
-    print(initial_solution)
-    # pprint(g._graph)
-    #print (g._graph)
-    #print '--\n'    
+    # initial solutions list
+    initSolutions = [solution]
+    # print initSolutions[0]
 
-    '''-- manual graph build
-    connections = [('A', 'B', 10), ('B', 'C', 3), ('B', 'D', 2), ('C', 'D', 8), ('E', 'F', 30), ('F', 'C', 20)]
+    # local search solution improvement type:
+    # 1. first best (argv[2]: max iteration number)
+    #    max iteration number: of times in a row a worse solution is allowed
+    # 2. best best
+    # 3. percentage best (argv[2]: percentage)
+    if argv[1] == '1':
+        for solution in initSolutions:
+            local_search.first_best(g, solution, iterations)
+            best.append(solution._value)
+            print solution
 
-    weights = defaultdict(set)
-    weights[10] = ('A', 'B')
-    weights[3] = ('B', 'C')
-    weights[2] = ('B', 'D')
-    weights[8] = ('C', 'D') 
-    weights[30] = ('E', 'F')
-    weights[20] = ('F' , 'C')
-    --
+    elif argv[1] == '2':
+        local_search.best_best(g, initSolutions[0]) 
+        best.append(initSolutions[0]._value)
+        print initSolutions[0]
+        
+    elif argv[1] == '3':
+        for solution in initSolutions:
+            local_search.percentage_best(g, solution, percentage)
+            best.append(solution._value)
+            print solution
 
-    sol_state = []
+    # best solutions list
+    print best
 
-    manual initial solution
-
-    solution = Solution({1}, {2, 3, 4, 5, 6}, 15)
-
-    print '-- init solution:'
-    print solution
-    print 'best: ' + str(solution._value)
-    print '--\n'
-
-    # local_search.first_best(g, solution)
-    local_search.best_best(g, solution)
-    '''
 if __name__ == "__main__":
     main(sys.argv)
