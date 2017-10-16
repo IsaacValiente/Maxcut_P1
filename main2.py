@@ -90,8 +90,8 @@ def main(argv):
             print 'usage error: improvement type ' + argv[2] + ' not found'
             return
 
-    # nodes, opt_sol, connections = readDataFile("set1/g1.rud")
-    nodes, opt_sol, connections = readDataFile("example_set/e1.rud")
+    nodes, opt_sol, connections = readDataFile("set1/g1.rud")
+    # nodes, opt_sol, connections = readDataFile("example_set/e1.rud")
 
     #print '\n'
     #print '-- graph'
@@ -107,14 +107,14 @@ def main(argv):
         initial_solution = generate_initial(g,True)
         #GREEDY
         # initial_solution = generate_initial(g)
-        # print("INITIAL SOLUTION: "+str(initial_solution))
+        print("INITIAL SOLUTION: "+str(initial_solution))
         initSolutions.append(initial_solution)
     
-    print '-- solution list (x' + str(solutionNumber) + ')'
-    for sol in initSolutions:
-        print sol
-        print '-'
-    print '--\n'
+    # print '-- solution list (x' + str(solutionNumber) + ')'
+    # for sol in initSolutions:
+    #     print sol
+    #     print '-'
+    # print '--\n'
 
     # local search solution improvement type:
     # 1. first best (argv[2]: max iteration number)
@@ -125,18 +125,18 @@ def main(argv):
         for solution in initSolutions:
             local_search.first_best(g, solution, iterations)
             best.append(solution._value)
-            print solution
+            # print solution
 
     elif argv[2] == '2':
         local_search.best_best(g, initSolutions[0]) 
         best.append(initSolutions[0]._value)
-        print initSolutions[0]
+        # print initSolutions[0]
         
     elif argv[2] == '3':
         for solution in initSolutions:
             local_search.percentage_best(g, solution, percentage)
             best.append(solution._value)
-            print solution
+            # print solution
 
     # best solutions list
     print best

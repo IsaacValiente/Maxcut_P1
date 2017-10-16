@@ -93,16 +93,16 @@ def first_best(graph, solution, iterations):
     # max iteration number: iterations allowed 
     while iterations > 0 and partitionB:
         candidate = random.sample(partitionB, 1)[0]
-        print 'node candidate: ' + str(candidate)
+        # print 'node candidate: ' + str(candidate)
         value = cut_value(graph, solution, candidate)
         if (value > solution._value):
             improved = True
-            print 'first best found: ' + str(value)
+            # print 'first best found: ' + str(value)
             solution.move(candidate)
             solution.set_value(value)
-            print '-- new solution'
-            print solution
-            print '--\n'
+            # print '-- new solution'
+            # print solution
+            # print '--\n'
             # reset left iteration number and update candidate pool
             iterationsLeft = iterations
             partitionB = copy.deepcopy(solution._partitionB)
@@ -124,16 +124,16 @@ def best_best(graph, solution):
     print '-- best best'
     # iteration number: partitionB length
     for candidate in partitionB:
-        print 'node candidate: ' + str(candidate)
+        # print 'node candidate: ' + str(candidate)
         value = cut_value(graph, solution, candidate)
         if (value > solution._value):
             improved = True
-            print 'better solution found: ' + str(value)
+            # print 'better solution found: ' + str(value)
             solution.move(candidate)
             solution.set_value(value)
-            print '-- new solution'
-            print solution
-            print '--\n'   
+            # print '-- new solution'
+            # print solution
+            # print '--\n'   
 
     print '--\n'
     print 'got stuck! Could not find a better solution than:'    
@@ -149,25 +149,24 @@ def percentage_best(graph, solution, percentageInt):
     iterations = int(math.floor(len(partitionB) * percentage))
 
     print '-- ' + str(int(percentage*100)) + '% percentage best (' + str(iterations) + ' iterations)'
-    
     # iteration number: percentage over partitionB length
     while iterations > 0:
         candidate = random.sample(partitionB, 1)[0]
-        print 'node candidate: ' + str(candidate)
+        # print 'node candidate: ' + str(candidate)
         value = cut_value(graph, solution, candidate)
         if (value > solution._value):
             improved = True
-            print 'better solution found: ' + str(value)
+            # print 'better solution found: ' + str(value)
             solution.move(candidate)
             solution.set_value(value)
-            print '-- new solution'
-            print solution
+            # print '-- new solution'
+            # print solution
             # calculate new iteration number and update candidate pool
             iterations = int(math.floor(len(solution._partitionB) * percentage))
             partitionB = copy.deepcopy(solution._partitionB)
-            print partitionB
-            print str(iterations) + ' iterations'
-            print '--\n'    
+            # print partitionB
+            # print str(iterations) + ' iterations'
+            # print '--\n'    
 
         else:
             iterations -= 1
