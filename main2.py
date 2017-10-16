@@ -59,8 +59,25 @@ def main(argv):
 
     # check command usage
     if len(argv) < 2:
-        print 'usage error'
+        print 'usage error: improvement type required'
+        print '1: first best\n2: best best\n3: percentage best'
         return
+    else:
+        if argv[1] == '1':
+            if len(argv) < 3:
+                print 'usage error: max iterarion number required'
+                return
+            else:
+                iterations = int(argv[2])
+        elif argv[1] == '3':
+            if len(argv) < 3:
+                print 'usage error: percentage required'
+                return
+            else:
+                percentage = int(argv[2])
+        elif int(argv[1]) > 3:
+            print 'usage error: improvement type ' + argv[1] + ' not found'
+            return
 
     # nodes, opt_sol, connections = readDataFile("set1/g1.rud")
     nodes, opt_sol, connections = readDataFile("example_set/e1.rud")
@@ -84,6 +101,7 @@ def main(argv):
     print 'best: ' + str(best)
     print '--\n'
 
+    # initial solutions list
     initSolutions = [solution]
     # print initSolutions[0]
 
@@ -93,36 +111,24 @@ def main(argv):
     # 2. best best
     # 3. percentage best (argv[2]: percentage)
     if argv[1] == '1':
-        if len(argv) < 3:
-            print 'usage error: max iterarion number required'
-            return
         for solution in initSolutions:
-            local_search.first_best(g, solution, int(argv[2]))
+            local_search.first_best(g, solution, iterations)
             best.append(solution._value)
             print solution
+
     elif argv[1] == '2':
         local_search.best_best(g, initSolutions[0]) 
+        best.append(initSolutions[0]._value)
         print initSolutions[0]
+        
     elif argv[1] == '3':
-        if len(argv) < 3:
-            print 'usage error: percentage required'
-            return
-        local_search.percentage_best(g, solution, int(argv[2]))
-        print solution
-    else:
-        'usage error'
+        for solution in initSolutions:
+            local_search.percentage_best(g, solution, percentage)
+            best.append(solution._value)
+            print solution
 
-    # best best
-    # local_search.best_best(g, solution)
-
-    # first best
-    # local_search.first_best(g, solution, iterations)
-    
-    # percentage best
-    # local_search.percentage_best(g, solution, percentage)
-
-    # solution found
-    # print solution
+    # best solutions list
+    print best
 
 if __name__ == "__main__":
     main(sys.argv)
