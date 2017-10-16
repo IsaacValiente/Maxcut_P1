@@ -1,69 +1,84 @@
-import copy
+import copy, random
 
 def generate_initial(self):
-		""" Generate initial solution """
+	""" Generate initial solution """
 
-def cut_value(graph, solution):
+def cut_value(graph, solution, candidate):
     """ Calculate weight of the cut solution """
     
-    cutWeight = 0
-    partition = solution._partitionA
+    # current weight of cut solution
+    cutWeight = solution._value
 
-    for node in partition:
-        # print node
-        for connection in graph._graph[node]:
-            # print connection[0]
-            if (connection[0]) not in (partition):
-                cutWeight += connection[1]
-
+    connections = graph._graph[candidate]
+    partitionA = solution._partitionA
+    
+    for connection in connections:
+        # print connection[0]
+        if (connection[0]) in (partitionA):
+            cutWeight -= connection[1]    
+        else:
+            cutWeight += connection[1]
+    
     return cutWeight
 
-# def solution_improvement() {
-    """ Determine better solution algorithm """
-# }
-
-def first_best(graph, solution):
+def first_best(graph, solution, iterations):
     """ Calculate first best of vicinity """
+    """ returns True if the solution improved, False otherwise""" 
+
+    improved = False
+    iterationsLeft = iterations
+    partitionB = copy.deepcopy(solution._partitionB)
 
     print '-- first best'
-    # max iteration number: vecinity size
-    for node in solution._partitionB:
-        # print node
-        new_solution = copy.deepcopy(solution)
-        new_node = solution.choose_random_node('B')
-        print 'node candidate: ' + str(new_node)
-        new_solution.move(new_node)
-        value = cut_value(graph, new_solution)
+    # max iterations allowed 
+    while iterations > 0 and partitionB:
+        # candidate = solution.choose_random_node('B')
+        candidate = random.sample(partitionB, 1)[0]
+        print 'node candidate: ' + str(candidate)
+        value = cut_value(graph, solution, candidate)
         if (value > solution._value):
-            print 'better solution found: ' + str(value)
-            solution = new_solution
+            improved = True
+            print 'first best found: ' + str(value)
+            solution.move(candidate)
             solution.set_value(value)
-            break
-    print '--\n'
+            print '-- new solution'
+            print solution
+            print '--\n'
+            # reset left iteration number
+            iterationsLeft = iterations
+        else:
+            iterationsLeft -= 1
 
-    print '-- new solution'
-    print solution
+        partitionB.remove(candidate)
+
     print '--\n'
+    print 'got stuck! Could not find a better solution than:'
+    return improved
+
 
 def best_best(graph, solution):
     """ Calculate best best of vicinity """
+    """ returns True if the solution improved, False otherwise """ 
+
+    improved = False
+    partitionB = copy.deepcopy(solution._partitionB)
+
     print '-- best best'
     # iteration number: vecinity size
-    for node in solution._partitionB:
-        # print node
-        new_solution = copy.deepcopy(solution)
-        new_node = solution.choose_random_node('B')
-        print 'node candidate: ' + str(new_node)
-        new_solution.move(new_node)
-        value = cut_value(graph, new_solution)
+    while partitionB:
+        candidate = partitionB.pop()
+        print 'node candidate: ' + str(candidate)
+        value = cut_value(graph, solution, candidate)
         if (value > solution._value):
+            improved = True
             print 'better solution found: ' + str(value)
-            solution = new_solution
+            solution.move(candidate)
             solution.set_value(value)
+            print '-- new solution'
+            print solution
+            print '--\n'   
 
     print '--\n'
-
-    print '-- new solution'
-    print solution
-    print '--\n'
+    print 'got stuck! Could not find a better solution than:'    
+    return improved
 

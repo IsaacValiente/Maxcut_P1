@@ -70,30 +70,26 @@ def main(argv):
     print (g._graph)
     print '--\n'    
 
-    # -- manual graph build
-    # connections = [('A', 'B', 10), ('B', 'C', 3), ('B', 'D', 2), ('C', 'D', 8), ('E', 'F', 30), ('F', 'C', 20)]
-
-    # weights = defaultdict(set)
-    # weights[10] = ('A', 'B')
-    # weights[3] = ('B', 'C')
-    # weights[2] = ('B', 'D')
-    # weights[8] = ('C', 'D') 
-    # weights[30] = ('E', 'F')
-    # weights[20] = ('F' , 'C')
-    # --
-
-    # sol_state = []
-
     # manual initial solution
-    solution = Solution({1}, {2, 3, 4, 5, 6}, 15)
+    solution = Solution({1}, {2, 3, 4, 5, 6}, 10)
+    best = solution._value
+
+    # number of times in a row a worse solution is allowed
+    iterations = 5
 
     print '-- init solution:'
     print solution
-    print 'best: ' + str(solution._value)
+    print 'best: ' + str(best)
     print '--\n'
 
-    # local_search.first_best(g, solution)
-    local_search.best_best(g, solution)
+    # best best
+    # local_search.best_best(g, solution)
+
+    # first best
+    local_search.first_best(g, solution, iterations)
+    
+    # solution found
+    print solution
 
 if __name__ == "__main__":
     main(sys.argv)

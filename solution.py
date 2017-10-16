@@ -9,9 +9,11 @@ class Solution():
         self._value = cutWeight
 
     def set_value(self, cutWeight):
+        """ Set value of the solution """
         self._value = cutWeight
 
     def add(self, node):
+        """ Add node to partition A """
         partition = self._partitionA
  
         if node in partition:
@@ -19,18 +21,15 @@ class Solution():
         partition.add(node)
 
     def move(self, node):
+        """ Move node from partition B to partition A """
         partitionA = self._partitionA
         partitionB = self._partitionB
 
-        # print partitionB
-
-        # remove node from partition B
         partitionB.remove(node)
-
-        # add node to partition A
         self.add(node)
 
     def choose_random_node(self, partitionName):
+        """ Choose random node from requested partition """
         if partitionName == 'A':
             partition = self._partitionA
         if partitionName == 'B':
