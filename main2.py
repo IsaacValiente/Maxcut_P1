@@ -57,6 +57,11 @@ def readDataFile(filename):
 
 def main(argv):
 
+    # check command usage
+    if len(argv) < 2:
+        print 'usage error'
+        return
+
     # nodes, opt_sol, connections = readDataFile("set1/g1.rud")
     nodes, opt_sol, connections = readDataFile("example_set/e1.rud")
 
@@ -72,16 +77,40 @@ def main(argv):
 
     # manual initial solution
     solution = Solution({1}, {2, 3, 4, 5, 6}, 10)
-    best = solution._value
-
-    # number of times in a row a worse solution is allowed
-    iterations = 5
-    percentage = 1
+    best = []
 
     print '-- init solution:'
     print solution
     print 'best: ' + str(best)
     print '--\n'
+
+    initSolutions = [solution]
+    # print initSolutions[0]
+
+    # local search solution improvement type:
+    # 1. first best (argv[2]: max iteration number)
+    #    max iteration number: of times in a row a worse solution is allowed
+    # 2. best best
+    # 3. percentage best (argv[2]: percentage)
+    if argv[1] == '1':
+        if len(argv) < 3:
+            print 'usage error: max iterarion number required'
+            return
+        for solution in initSolutions:
+            local_search.first_best(g, solution, int(argv[2]))
+            best.append(solution._value)
+            print solution
+    elif argv[1] == '2':
+        local_search.best_best(g, initSolutions[0]) 
+        print initSolutions[0]
+    elif argv[1] == '3':
+        if len(argv) < 3:
+            print 'usage error: percentage required'
+            return
+        local_search.percentage_best(g, solution, int(argv[2]))
+        print solution
+    else:
+        'usage error'
 
     # best best
     # local_search.best_best(g, solution)
@@ -90,10 +119,10 @@ def main(argv):
     # local_search.first_best(g, solution, iterations)
     
     # percentage best
-    local_search.percentage_best(g, solution, percentage)
+    # local_search.percentage_best(g, solution, percentage)
 
     # solution found
-    print solution
+    # print solution
 
 if __name__ == "__main__":
     main(sys.argv)

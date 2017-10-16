@@ -1,3 +1,4 @@
+from __future__ import division
 import copy, random, math
 
 def generate_initial(self):
@@ -79,11 +80,12 @@ def best_best(graph, solution):
     print 'got stuck! Could not find a better solution than:'    
     return improved
 
-def percentage_best(graph, solution, percentage):
+def percentage_best(graph, solution, percentageInt):
     """ Calculate best best of vicinity percentage """
     """ returns True if the solution improved, False otherwise """ 
 
     improved = False
+    percentage = percentageInt/100
     partitionB = copy.deepcopy(solution._partitionB)
     iterations = int(math.floor(len(partitionB) * percentage))
 
@@ -113,5 +115,5 @@ def percentage_best(graph, solution, percentage):
             partitionB.remove(candidate)
 
     print '--\n'
-    print 'got stuck! Could not find a better solution than:'    
+    print 'got stuck! Could not find a better solution than:'
     return improved
