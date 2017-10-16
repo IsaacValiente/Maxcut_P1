@@ -40,7 +40,8 @@ def weight(graph,A,B,v):
     return wvb - wva
   
 def cut_value(graph, solution, candidate):
-    """ Calculate weight of the cut solution """
+    """ Calculate weight of the solution if a candidate is added to the cut """
+    
     # current weight of cut solution
     cutWeight = solution._value
 

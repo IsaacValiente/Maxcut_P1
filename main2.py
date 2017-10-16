@@ -60,11 +60,13 @@ def readDataFile(filename):
 def main(argv):
 
     # check command usage
-    if len(argv) < 2:
-        print 'usage error: improvement type required'
+    if len(argv) < 3:
+        print 'usage error: arguments required'
         print '1: first best\n2: best best\n3: percentage best'
         return
     else:
+        # number of solutions
+        solutionNumber = int(argv[3])
         if argv[1] == '1':
             if len(argv) < 3:
                 print 'usage error: max iterarion number required'
@@ -89,15 +91,18 @@ def main(argv):
     print("nodes: "+str(nodes))
     print("optimal solution: "+str(opt_sol))
     g = Graph(connections)
-    #RANDOM
-    initial_solution = generate_initial(g,True)
-    #GREEDY
-    initial_solution = generate_initial(g)
-    print("INITIAL SOLUTION: "+str(initial_solution))
 
     # initial solutions list
-    initSolutions = [solution]
-    # print initSolutions[0]
+    initSolutions = []
+    best = []
+    for i in range(solutionNumber-1):
+        #RANDOM
+        # initial_solution = generate_initial(g,True)
+        #GREEDY
+        initSolutions.append(generate_initial(g))
+        # print("INITIAL SOLUTION: "+str(initial_solution))
+
+    print initSolutions
 
     # local search solution improvement type:
     # 1. first best (argv[2]: max iteration number)
