@@ -1,4 +1,5 @@
 from __future__ import division
+from solution import Solution
 import copy, random, math
 
 ###################################################################
@@ -24,8 +25,18 @@ def generate_initial(graph, rand=False):
                 partitionA.add(node)
             else:
                 partitionB.add(node)
-    return (partitionA,partitionB)
 
+    cutValue = totalCutValue(graph, partitionA, partitionB)
+
+    return Solution(partitionA, partitionB, cutValue)
+    # return (partitionA,partitionB)
+
+###################################################################
+# weight
+# @param [graph] Graph
+# @param [A] Set of nodes : partitionA
+# @param [B] Set of nodes : partitionB
+# @param [v] vertex
 def weight(graph,A,B,v):
     wvb = 0
     wva = 0
@@ -38,6 +49,19 @@ def weight(graph,A,B,v):
         if graph.is_connected(v,a):
             wva = wva + graph.weight(v,a)    
     return wvb - wva
+
+
+###################################################################
+# totalCutValue
+def totalCutValue(graph, A, B):
+    """ Get the total value of the Cut """
+    cutWeight = 0
+    for a in A:
+        for b in B:
+            if graph.is_connected(a,b):
+                cutWeight = cutWeight + graph.weight(a,b)
+    return cutWeight
+  
   
 def cut_value(graph, solution, candidate):
     """ Calculate weight of the solution if a candidate is added to the cut """

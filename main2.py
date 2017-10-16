@@ -3,7 +3,7 @@
 from graph import Graph
 from solution import Solution
 from collections import defaultdict
-from local_search import generate_initial
+from local_search import generate_initial, totalCutValue
 
 import local_search
 import sys
@@ -62,25 +62,32 @@ def main(argv):
     # check command usage
     if len(argv) < 3:
         print 'usage error: arguments required'
-        print '1: first best\n2: best best\n3: percentage best'
+        print 'argv[1]: number of solutions to test'
+        print 'argv[2]: improvement type'
+        print '         1: first best'
+        print '         2: best best'
+        print '         3: percentage best'
+        print 'argv[3]: improvement type argument'
+        print '         first best: max iteration number'
+        print '         percentage best: percentage'
         return
     else:
         # number of solutions
-        solutionNumber = int(argv[3])
-        if argv[1] == '1':
+        solutionNumber = int(argv[1])
+        if argv[2] == '1':
             if len(argv) < 3:
                 print 'usage error: max iterarion number required'
                 return
             else:
-                iterations = int(argv[2])
-        elif argv[1] == '3':
+                iterations = int(argv[3])
+        elif argv[2] == '3':
             if len(argv) < 3:
                 print 'usage error: percentage required'
                 return
             else:
-                percentage = int(argv[2])
-        elif int(argv[1]) > 3:
-            print 'usage error: improvement type ' + argv[1] + ' not found'
+                percentage = int(argv[3])
+        elif int(argv[2]) > 3:
+            print 'usage error: improvement type ' + argv[2] + ' not found'
             return
 
     # nodes, opt_sol, connections = readDataFile("set1/g1.rud")
@@ -95,32 +102,37 @@ def main(argv):
     # initial solutions list
     initSolutions = []
     best = []
-    for i in range(solutionNumber-1):
+    for i in range(solutionNumber):
         #RANDOM
-        # initial_solution = generate_initial(g,True)
+        initial_solution = generate_initial(g,True)
         #GREEDY
-        initSolutions.append(generate_initial(g))
+        # initial_solution = generate_initial(g)
         # print("INITIAL SOLUTION: "+str(initial_solution))
-
-    print initSolutions
+        initSolutions.append(initial_solution)
+    
+    print '-- solution list (x' + str(solutionNumber) + ')'
+    for sol in initSolutions:
+        print sol
+        print '-'
+    print '--\n'
 
     # local search solution improvement type:
     # 1. first best (argv[2]: max iteration number)
     #    max iteration number: of times in a row a worse solution is allowed
     # 2. best best
     # 3. percentage best (argv[2]: percentage)
-    if argv[1] == '1':
+    if argv[2] == '1':
         for solution in initSolutions:
             local_search.first_best(g, solution, iterations)
             best.append(solution._value)
             print solution
 
-    elif argv[1] == '2':
+    elif argv[2] == '2':
         local_search.best_best(g, initSolutions[0]) 
         best.append(initSolutions[0]._value)
         print initSolutions[0]
         
-    elif argv[1] == '3':
+    elif argv[2] == '3':
         for solution in initSolutions:
             local_search.percentage_best(g, solution, percentage)
             best.append(solution._value)
