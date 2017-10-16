@@ -22,8 +22,22 @@ class Graph(object):
 
     def is_connected(self, node1, node2):
         """ Is node1 directly connected to node2 """
+        connected = False
+        if node1 in self._graph:
+            for node,w in self._graph[node1]:
+                if node2 == node:
+                    connected = True
+                    break
+        return connected
 
-        return node1 in self._graph and node2 in self._graph[node1]
+    def weight(self, node1, node2):
+        """ Is node1 directly connected to node2 """
+        weight = 0
+        for node,w in self._graph[node1]:
+            if node2 == node:
+                weight = w
+                break
+        return weight
 
     def __str__(self):
         return '{}({})'.format(self.__class__.__name__, dict(self._graph))

@@ -3,6 +3,7 @@
 from graph import Graph
 from solution import Solution
 from collections import defaultdict
+from local_search import generate_initial
 
 import local_search
 import sys
@@ -10,25 +11,26 @@ import sys
 ##############################################
 # Print Graph
 # PYTHON3 needed
-# def pprint(g):
-#     print("{'", end="")
-#     first = True
-#     for node in g:
-#         if first:
-#             first = False
-#             print (str(node)+"': {", end="")
-#         else:
-#             print ("  "+str(node)+"': {", end="")
-#         ffirst = True
-#         for n,w in g[node]:
-#             if ffirst:
-#                 ffirst = False
-#                 print ("("+str(n)+","+str(w)+")",end="")
-#             else:
-#                 print (",("+str(n)+","+str(w)+")",end="")
-#         print("}")
-#     print("}")
-
+'''
+def pprint(g):
+    print("{'", end="")
+    first = True
+    for node in g:
+        if first:
+            first = False
+            print (str(node)+"': {", end="")
+        else:
+            print ("  "+str(node)+"': {", end="")
+        ffirst = True
+        for n,w in g[node]:
+            if ffirst:
+                ffirst = False
+                print ("("+str(n)+","+str(w)+")",end="")
+            else:
+                print (",("+str(n)+","+str(w)+")",end="")
+        print("}")
+    print("}")
+'''
 ##############################################
 # Read file
 # @param [File] filename : file with data
@@ -60,31 +62,34 @@ def main(argv):
     # nodes, opt_sol, connections = readDataFile("set1/g1.rud")
     nodes, opt_sol, connections = readDataFile("example_set/e1.rud")
 
-    print '\n'
-    print '-- graph'
+    #print '\n'
+    #print '-- graph'
     print("nodes: "+str(nodes))
     print("optimal solution: "+str(opt_sol))
     g = Graph(connections)
+    initial_solution = generate_initial(g._graph,True)
 
+    print(initial_solution)
     # pprint(g._graph)
-    print (g._graph)
-    print '--\n'    
+    #print (g._graph)
+    #print '--\n'    
 
-    # -- manual graph build
-    # connections = [('A', 'B', 10), ('B', 'C', 3), ('B', 'D', 2), ('C', 'D', 8), ('E', 'F', 30), ('F', 'C', 20)]
+    '''-- manual graph build
+    connections = [('A', 'B', 10), ('B', 'C', 3), ('B', 'D', 2), ('C', 'D', 8), ('E', 'F', 30), ('F', 'C', 20)]
 
-    # weights = defaultdict(set)
-    # weights[10] = ('A', 'B')
-    # weights[3] = ('B', 'C')
-    # weights[2] = ('B', 'D')
-    # weights[8] = ('C', 'D') 
-    # weights[30] = ('E', 'F')
-    # weights[20] = ('F' , 'C')
-    # --
+    weights = defaultdict(set)
+    weights[10] = ('A', 'B')
+    weights[3] = ('B', 'C')
+    weights[2] = ('B', 'D')
+    weights[8] = ('C', 'D') 
+    weights[30] = ('E', 'F')
+    weights[20] = ('F' , 'C')
+    --
 
-    # sol_state = []
+    sol_state = []
 
-    # manual initial solution
+    manual initial solution
+
     solution = Solution({1}, {2, 3, 4, 5, 6}, 15)
 
     print '-- init solution:'
@@ -94,6 +99,6 @@ def main(argv):
 
     # local_search.first_best(g, solution)
     local_search.best_best(g, solution)
-
+    '''
 if __name__ == "__main__":
     main(sys.argv)
