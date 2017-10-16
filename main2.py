@@ -76,6 +76,7 @@ def main(argv):
 
     # number of times in a row a worse solution is allowed
     iterations = 5
+    percentage = 1
 
     print '-- init solution:'
     print solution
@@ -86,8 +87,11 @@ def main(argv):
     # local_search.best_best(g, solution)
 
     # first best
-    local_search.first_best(g, solution, iterations)
+    # local_search.first_best(g, solution, iterations)
     
+    # percentage best
+    local_search.percentage_best(g, solution, percentage)
+
     # solution found
     print solution
 
