@@ -1,5 +1,5 @@
 from collections import defaultdict
-
+from random import choice
 
 class Graph(object):
     """ Graph data structure """
@@ -7,6 +7,17 @@ class Graph(object):
     def __init__(self, connections):
         self._graph = defaultdict(set)
         self.add_connections(connections)
+
+    def rand_node(self):
+        keys = self._graph.keys()
+        node = choice(keys)
+        return node
+
+    def first(self):
+        u_keys = (self._graph.keys())
+        s_keys = sorted(u_keys)
+        node = s_keys[0] if len(s_keys) > 0 else None
+        return node        
 
     def add_connections(self, connections):
         """ Add connections (list of tuple pairs) to graph """
@@ -31,7 +42,7 @@ class Graph(object):
         return connected
 
     def weight(self, node1, node2):
-        """ Is node1 directly connected to node2 """
+        """ Weight of vertex (node1,node2)"""
         weight = 0
         for node,w in self._graph[node1]:
             if node2 == node:

@@ -8,30 +8,6 @@ from local_search import generate_initial, totalCutValue
 import local_search
 import sys
 
-##############################################
-# Print Graph
-# PYTHON3 needed
-'''
-def pprint(g):
-    print("{'", end="")
-    first = True
-    for node in g:
-        if first:
-            first = False
-            print (str(node)+"': {", end="")
-        else:
-            print ("  "+str(node)+"': {", end="")
-        ffirst = True
-        for n,w in g[node]:
-            if ffirst:
-                ffirst = False
-                print ("("+str(n)+","+str(w)+")",end="")
-            else:
-                print (",("+str(n)+","+str(w)+")",end="")
-        print("}")
-    print("}")
-'''
-##############################################
 # Read file
 # @param [File] filename : file with data
 def readDataFile(filename):

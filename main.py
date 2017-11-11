@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 from graph import Graph
 import sys
+from tabu import tabuSearch
+from local_search import generate_initial, totalCutValue
 
 ##############################################
 # Print Graph
@@ -47,18 +49,23 @@ def readDataFile(filename):
                 connections.append(l)
     return nodes, opt_sol, connections
 
-
 ##############################################
 # MAIN        
 
 def main(argv):
-    # nodes, opt_sol, connections = readDataFile("set1/g1.rud")
     nodes, opt_sol, connections = readDataFile("example_set/e1.rud")
     print("nodes: "+str(nodes))
     print("optimal solution: "+str(opt_sol))
     g = Graph(connections)
-    # pprint(g._graph)
-    print (g._graph)
+    initial_solution = generate_initial(g,True)
+    print("INITIAL SOLUTION: "+str(initial_solution))
+    maxIWoImp = 5000
+    neighSize = nodes
+    minTIter = 2
+    maxTIter = 3
+    sol = tabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter)
+    print("tabu_val: "+str(sol._value))
+
 
 if __name__ == "__main__":
     main(sys.argv)
