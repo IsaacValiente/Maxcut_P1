@@ -74,16 +74,19 @@ def tabuTotal(graph, A, B, sum, n1, n2):
 
     for c1 in connect_n1:
         if c1[0] in A:
-            wn1a += c1[1]    
+            if c1[0] != n2:
+                wn1a += c1[1]
         else:
-            wn1b += c1[1]
+            if c1[0] != n2:
+               wn1b += c1[1]
 
     for c2 in connect_n2:
         if c2[0] in A:
-            wn2a += c2[1]    
+            if c2[0] != n1:
+                wn2a += c2[1]
         else:
-            wn2b += c2[1]
-
+            if c2[0] != n1:
+                wn2b += c2[1]
     if n1 in A:
         wn1 = wn1a - wn1b
     else:
@@ -92,11 +95,6 @@ def tabuTotal(graph, A, B, sum, n1, n2):
         wn2 = wn2a - wn2b
     else:
         wn2 = wn2b - wn2a
-
-    print("A:"+str(A))
-    print("B:"+str(B))
-    print()
-    
     return sum+wn1+wn2
 
 ###################################################################
@@ -117,7 +115,6 @@ def generateNeighborT(graph, s1,s2, sum, neighSize, tList, minTIter, maxTIter):
         n1 = graph.rand_node()
         while n1 == act:
             n1 = graph.rand_node()
-
         tot = tabuTotal(graph,s1,s2, sum, act,n1)
         if tot >= sum:
             tappend(tList,act,randint(minTIter, maxTIter))
@@ -152,22 +149,22 @@ def tabuSearch(maxIWoImp, graph, s1, s2, neighSize, minTIter, maxTIter):
     c = 0
     u1 = deepcopy(s1)
     u2 = deepcopy(s2)
-    utot = totalCutValue(graph,u1,u2)
     total = totalCutValue(graph,s1,s2)
+    u_total = totalCutValue(graph,u1,u2)
     while c < maxIWoImp :
         total = generateNeighborT(graph, s1, s2, total, neighSize, tList, minTIter, maxTIter)
-        if total > utot:
+        if total > u_total:
             u1 = deepcopy(s1)
             u2 = deepcopy(s2)
-            utot = total
-            print("total :"+str(total))
-            print(c)
+            u_total = total
+            print("Iteraciones antes de mejorar: "+str(c))
             c = 0
+            print(u_total)
 
         else:
             c = c + 1
         updateTabuList(tList)
-    sol = Solution(u1, u2, totalCutValue(graph,u1,u2))
+    sol = Solution(u1, u2, u_total)
     return sol
 
 ###################################################################
