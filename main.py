@@ -53,7 +53,7 @@ def readDataFile(filename):
 # MAIN        
 
 def main(argv):
-    nodes, opt_sol, connections = readDataFile("example_set/e1.rud")
+    nodes, opt_sol, connections = readDataFile("set1/g1.rud")
     print("nodes: "+str(nodes))
     print("optimal solution: "+str(opt_sol))
     g = Graph(connections)
