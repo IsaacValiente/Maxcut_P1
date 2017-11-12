@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from graph import Graph
 import sys
-from tabu import tabuSearch
+from tabu import tabuSearch, annealing
 from local_search import generate_initial, totalCutValue
 
 ##############################################
@@ -63,8 +63,14 @@ def main(argv):
     neighSize = nodes
     minTIter = 2
     maxTIter = 3
-    sol = tabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter)
-    print("tabu_val: "+str(sol._value))
+    # sol = tabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter)
+
+    temp = 5000
+    A = 200
+    K = 2000
+    maxIWoImpSA = 5000
+    sol = annealing(maxIWoImpSA, g, initial_solution._partitionA, initial_solution._partitionB, K, A, temp, initial_solution._value, neighSize)
+    # print("tabu_val: "+str(sol._value))
 
 
 if __name__ == "__main__":

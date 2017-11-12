@@ -1,5 +1,5 @@
 from numpy import inf
-from random import randint
+from random import randint, uniform
 from graph import Graph
 from copy import deepcopy
 
@@ -182,19 +182,22 @@ def tabuSearch(maxIWoImp, graph, s1, s2, neighSize, minTIter, maxTIter):
 def generateNeighborSA(graph, s1,s2, sum, neighSize):
     """  """
     best = -inf
-    act = 0
+    act = 1
     while act < neighSize :
         swap(act,s1,s2)
         n1 = graph.rand_node()
         swap(n1,s1,s2)
 
-        if totalCutValue(graph,s1,s2) >= sum:
-            best = totalCutValue(graph,s1,s2)
+        # value of the new cut
+        cut = totalCutValue(graph,s1,s2)
+
+        if cut >= sum:
+            best = cut
             break
-        elif totalCutValue(graph,s1,s2) > best :
+        elif cut > best :
             node1 = act
             node2 = n1
-            best = totalCutValue(graph,s1,s2)
+            best = cut
         swap(act,s1,s2)
         swap(n1,s1,s2)
         act = act + 1
@@ -215,32 +218,54 @@ def generateNeighborSA(graph, s1,s2, sum, neighSize):
 # @param [sum] Minimun tabu iterations
 # @param [neighSize] Maximun tabu iterations
 
-def annealing(maxIWoImp, graph, s1, s2, K, A, temp, sum, neighSize ):
+def annealing(maxIWoImp, graph, s1, s2, K, A, temp, initCut, neighSize ):
     """ Simulated Annealing metaheuristic"""
-    c,k,a = 0,0,0
+    c,k,a, = 0,0,0
     u1,u2 = s1,s2
-    
+
+    # how to set alpha and beta?
+    alpha = 0.7
+    beta = 1.1
+
     while c < maxIWoImp :
-        startingSum = cut(s1,s2)
+        print("c: "+c+'\n')
+        startingCut = totalCutValue(graph, s1, s2)
+
+        startingSum = startingCut
+        print("starting sum: "+str(startingSum)+'\n')        
+
         while k < K and a < A:
             t1,t2 = s1,s2
-            s1,s2 = generateNeighborSA(graph, s1, s2, cut(s1,s2), neighSize)
+            s1,s2 = generateNeighborSA(graph, s1, s2, startingCut, neighSize)
 
-            if cut(s1,s2) > cut(t1,t2):
-                if cut(s1,s2) > cut(u1,u2):
+            print("new neighbour: "+str(s1)+'\n'+str(s1)+'\n')
+
+            prevCut = totalCutValue(graph, t1, t2)
+            newCut = totalCutValue(graph, s1, s2)
+
+            print("new cut: "+str(totalCutValue(graph, s1, s2))+'\n')            
+
+            if newCut > startingCut:
+                if newCut > initCut:
                     u1,u2 = s1,s2
                 a = a + 1
             else:
-                delta = random_float(0,1)
-                if delta > calc(cut(s1,s2),cut(t1,t2),temp):
+                delta = uniform(0, 1)
+                if delta > ((newCut - prevCut)/temp):
                     s1,s2 = t1,t2
                     a = a + 1
             k = k + 1
+
         temp = alpha*temp
         K = beta*K
         k,a = 0,0
 
-        if cut(s1,s2) <= startingSum:
+        print('temp: '+temp)
+        print('K: '+K)
+        print('A:'+A)
+
+        endingCut = totalCutValue(graph, s1, s2)
+        if endingCut <= startingSum:
             c = c + 1
         else:
             c = 0 
