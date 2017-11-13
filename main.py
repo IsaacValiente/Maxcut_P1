@@ -2,32 +2,64 @@
 # -*- coding: utf-8 -*-
 from graph import Graph
 import sys
-from tabu import tabuSearch
+from tabu import TabuSearch, CompTabuSearch
 from local_search import generate_initial, totalCutValue
+import time
+from numpy import inf
+from math import pow, sqrt
+
+
+# mean
+def a_Time(xsolution):
+    avg_time = 0
+    for s in xsolution:
+        avg_time += s[1]
+    avg_time = avg_time / len(xsolution)
+    return avg_time
 
 ##############################################
-# Print Graph
-# PYTHON3 needed
-# def pprint(g):
-#     print("{'", end="")
-#     first = True
-#     for node in g:
-#         if first:
-#             first = False
-#             print (str(node)+"': {", end="")
-#         else:
-#             print ("  "+str(node)+"': {", end="")
-#         ffirst = True
-#         for n,w in g[node]:
-#             if ffirst:
-#                 ffirst = False
-#                 print ("("+str(n)+","+str(w)+")",end="")
-#             else:
-#                 print (",("+str(n)+","+str(w)+")",end="")
-#         print("}")
-#     print("}")
+
+# mean
+def mean(xsolution):
+    meanv = 0
+    for s in xsolution:
+        meanv += s[0]._value
+    meanv = (meanv / len(xsolution))
+    return meanv
 
 ##############################################
+
+# mean
+def desvStd(xsolution, mean):
+    desv = 0
+    for s in xsolution:
+        desv += pow((s[0]._value - mean),2)
+    desv = desv / len(xsolution)
+    desv = sqrt(desv)
+    return desv
+
+##############################################
+
+# mean
+def min(xsolution):
+    minv = inf
+    for s in xsolution:
+        if s[0]._value < minv:
+            minv = s[0]._value
+    return minv
+
+##############################################
+
+# mean
+def max(xsolution):
+    maxv = -inf
+    for s in xsolution:
+        if s[0]._value > maxv:
+            maxv = s[0]._value
+    return maxv
+
+##############################################
+
 # Read file
 # @param [File] filename : file with data
 def readDataFile(filename):
@@ -53,18 +85,77 @@ def readDataFile(filename):
 # MAIN        
 
 def main(argv):
-    nodes, opt_sol, connections = readDataFile("set1/g1.rud")
-    print("nodes: "+str(nodes))
-    print("optimal solution: "+str(opt_sol))
+    problem = sys.argv[1]
+    print("################# "+problem+" #################")
+    nodes, opt_sol, connections = readDataFile("set1/"+problem)
     g = Graph(connections)
-    initial_solution = generate_initial(g,True)
-    print("INITIAL SOLUTION: "+str(initial_solution))
+    initial_solution = generate_initial(g,False)
+
     maxIWoImp = 5000
     neighSize = nodes
-    minTIter = 2
-    maxTIter = 3
-    sol = tabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter)
-    print("tabu_val: "+str(sol._value))
+    minTIter = 25
+    maxTIter = 100
+    start_time = time.time()
+    sol_fb = []
+    sol_porc = []
+    sol_ct = []
+    sol_bb = (TabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter, 100, False),time.time() - start_time)
+    for i in range(0,5):
+        print("iteracion: "+str(i))
+        start_time = time.time()
+        sol_fb.append((TabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter, 100, True),time.time() - start_time))
+        start_time = time.time()
+        sol_porc.append((TabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter, 70, False),time.time() - start_time))
+        start_time = time.time()
+        sol_ct.append((CompTabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter),time.time() - start_time))        
+    
+
+    print("##### Best #####")
+
+    print("\tValue: "+str(sol_bb[0]._value))
+    print("\tTime: "+str(sol_bb[1]))
+
+    print("##### FirstBest #####")
+
+    meanv = mean(sol_fb)
+    maxv = max(sol_fb) 
+    minv = min(sol_fb)
+    desv = desvStd(sol_fb, meanv)
+    avgTime = a_Time(sol_fb)
+
+    print("\tMean: "+str(meanv))
+    print("\tMax: "+str(maxv))
+    print("\tMin: "+str(minv))
+    print("\tAvgTime: "+str(avgTime))
+    print("\tDesv: "+str(desv))
+
+    print("##### 70% #####")
+
+    meanv = mean(sol_porc)
+    maxv = max(sol_porc) 
+    minv = min(sol_porc)
+    desv = desvStd(sol_porc, meanv)
+    avgTime = a_Time(sol_porc)
+
+    print("\tMean: "+str(meanv))
+    print("\tMax: "+str(maxv))
+    print("\tMin: "+str(minv))
+    print("\tAvgTime: "+str(avgTime))
+    print("\tDesv: "+str(desv))    
+
+    print("##### CompetitiveTabu #####")
+
+    meanv = mean(sol_ct)
+    maxv = max(sol_ct) 
+    minv = min(sol_ct)
+    desv = desvStd(sol_ct, meanv)
+    avgTime = a_Time(sol_ct)
+
+    print("\tMean: "+str(meanv))
+    print("\tMax: "+str(maxv))
+    print("\tMin: "+str(minv))
+    print("\tAvgTime: "+str(avgTime))
+    print("\tDesv: "+str(desv))    
 
 
 if __name__ == "__main__":

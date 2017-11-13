@@ -1,5 +1,5 @@
 from collections import defaultdict
-from random import choice
+from random import choice, sample
 
 class Graph(object):
     """ Graph data structure """
@@ -17,7 +17,14 @@ class Graph(object):
         u_keys = (self._graph.keys())
         s_keys = sorted(u_keys)
         node = s_keys[0] if len(s_keys) > 0 else None
-        return node        
+        return node
+
+    def get_sample(self,percentage):
+        keys = self._graph.keys()
+        k = len(keys) * percentage // 100
+        indices = sample(xrange(len(keys)), k)
+        p_sample = [keys[i] for i in indices]
+        return p_sample     
 
     def add_connections(self, connections):
         """ Add connections (list of tuple pairs) to graph """
