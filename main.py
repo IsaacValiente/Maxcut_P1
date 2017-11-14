@@ -100,8 +100,7 @@ def main(argv):
     sol_porc = []
     sol_ct = []
     sol_bb = (TabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter, 100, False),time.time() - start_time)
-    for i in range(0,5):
-        print("iteracion: "+str(i))
+    for i in range(0,10):
         start_time = time.time()
         sol_fb.append((TabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter, 100, True),time.time() - start_time))
         start_time = time.time()
