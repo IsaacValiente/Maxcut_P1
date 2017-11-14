@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from graph import Graph
 import sys
+import time
 from tabu import tabuSearch, annealing
 from local_search import generate_initial, totalCutValue
 
@@ -53,25 +54,24 @@ def readDataFile(filename):
 # MAIN        
 
 def main(argv):
-    nodes, opt_sol, connections = readDataFile("set1/g1.rud")
-    print("nodes: "+str(nodes))
-    print("optimal solution: "+str(opt_sol))
+    start = time.time()
+    nodes, opt_sol, connections = readDataFile("set1/g44.rud")
     g = Graph(connections)
-    initial_solution = generate_initial(g,True)
-    print("INITIAL SOLUTION: "+str(initial_solution))
+    initial_solution = generate_initial(g,False)
+    # print("INITIAL SOLUTION: "+str(initial_solution))
     maxIWoImp = 5000
     neighSize = nodes
     minTIter = 2
     maxTIter = 3
     # sol = tabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter)
 
-    temp = 5000
+    temp = 50000
     A = 200
     K = 2000
-    maxIWoImpSA = 5000
+    maxIWoImpSA = 10
     sol = annealing(maxIWoImpSA, g, initial_solution._partitionA, initial_solution._partitionB, K, A, temp, initial_solution._value, neighSize)
-    # print("tabu_val: "+str(sol._value))
-
+    end = time.time()
+    print('elapsed time: '+str(end - start))
 
 if __name__ == "__main__":
     main(sys.argv)
