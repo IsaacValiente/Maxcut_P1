@@ -2,33 +2,64 @@
 # -*- coding: utf-8 -*-
 from graph import Graph
 import sys
-import time
-from tabu import tabuSearch, annealing
+from tabu import TabuSearch, CompTabuSearch, annealing
 from local_search import generate_initial, totalCutValue
+import time
+from numpy import inf
+from math import pow, sqrt
+
+
+# mean
+def a_Time(xsolution):
+    avg_time = 0
+    for s in xsolution:
+        avg_time += s[1]
+    avg_time = avg_time / len(xsolution)
+    return avg_time
 
 ##############################################
-# Print Graph
-# PYTHON3 needed
-# def pprint(g):
-#     print("{'", end="")
-#     first = True
-#     for node in g:
-#         if first:
-#             first = False
-#             print (str(node)+"': {", end="")
-#         else:
-#             print ("  "+str(node)+"': {", end="")
-#         ffirst = True
-#         for n,w in g[node]:
-#             if ffirst:
-#                 ffirst = False
-#                 print ("("+str(n)+","+str(w)+")",end="")
-#             else:
-#                 print (",("+str(n)+","+str(w)+")",end="")
-#         print("}")
-#     print("}")
+
+# mean
+def mean(xsolution):
+    meanv = 0
+    for s in xsolution:
+        meanv += s[0]._value
+    meanv = (meanv / len(xsolution))
+    return meanv
 
 ##############################################
+
+# mean
+def desvStd(xsolution, mean):
+    desv = 0
+    for s in xsolution:
+        desv += pow((s[0]._value - mean),2)
+    desv = desv / len(xsolution)
+    desv = sqrt(desv)
+    return desv
+
+##############################################
+
+# mean
+def min(xsolution):
+    minv = inf
+    for s in xsolution:
+        if s[0]._value < minv:
+            minv = s[0]._value
+    return minv
+
+##############################################
+
+# mean
+def max(xsolution):
+    maxv = -inf
+    for s in xsolution:
+        if s[0]._value > maxv:
+            maxv = s[0]._value
+    return maxv
+
+##############################################
+
 # Read file
 # @param [File] filename : file with data
 def readDataFile(filename):
@@ -54,24 +85,104 @@ def readDataFile(filename):
 # MAIN        
 
 def main(argv):
-    start = time.time()
-    nodes, opt_sol, connections = readDataFile("set1/g44.rud")
+    problem = sys.argv[1]
+    search = sys.argv[2]
+    print("\n################# "+problem+" #################\n")
+    nodes, opt_sol, connections = readDataFile("set1/"+problem)
     g = Graph(connections)
     initial_solution = generate_initial(g,False)
-    # print("INITIAL SOLUTION: "+str(initial_solution))
-    maxIWoImp = 5000
-    neighSize = nodes
-    minTIter = 2
-    maxTIter = 3
-    # sol = tabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter)
 
-    temp = 50000
-    A = 200
-    K = 2000
-    maxIWoImpSA = 10
-    sol = annealing(maxIWoImpSA, g, initial_solution._partitionA, initial_solution._partitionB, K, A, temp, initial_solution._value, neighSize)
-    end = time.time()
-    print('elapsed time: '+str(end - start))
+    if (search == 'T'):
+        print("## TABU ##")
+        ##############################################
+        # TABU
+
+        maxIWoImp = 5000
+        neighSize = nodes
+        minTIter = 25
+        maxTIter = 100
+        start_time = time.time()
+        sol_fb = []
+        sol_porc = []
+        sol_ct = []
+        sol_bb = (TabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter, 100, False),time.time() - start_time)
+        for i in range(0,10):
+            start_time = time.time()
+            sol_fb.append((TabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter, 100, True),time.time() - start_time))
+            start_time = time.time()
+            sol_porc.append((TabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter, 70, False),time.time() - start_time))
+            start_time = time.time()
+            sol_ct.append((CompTabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter),time.time() - start_time))        
+        
+
+        print("##### Best #####")
+
+        print("\tValue: "+str(sol_bb[0]._value))
+        print("\tTime: "+str(sol_bb[1]))
+
+        print("##### FirstBest #####")
+
+        meanv = mean(sol_fb)
+        maxv = max(sol_fb) 
+        minv = min(sol_fb)
+        desv = desvStd(sol_fb, meanv)
+        avgTime = a_Time(sol_fb)
+
+        print("\tMean: "+str(meanv))
+        print("\tMax: "+str(maxv))
+        print("\tMin: "+str(minv))
+        print("\tAvgTime: "+str(avgTime))
+        print("\tDesv: "+str(desv))
+
+        print("##### 70% #####")
+
+        meanv = mean(sol_porc)
+        maxv = max(sol_porc) 
+        minv = min(sol_porc)
+        desv = desvStd(sol_porc, meanv)
+        avgTime = a_Time(sol_porc)
+
+        print("\tMean: "+str(meanv))
+        print("\tMax: "+str(maxv))
+        print("\tMin: "+str(minv))
+        print("\tAvgTime: "+str(avgTime))
+        print("\tDesv: "+str(desv))    
+
+        print("##### CompetitiveTabu #####")
+
+        meanv = mean(sol_ct)
+        maxv = max(sol_ct) 
+        minv = min(sol_ct)
+        desv = desvStd(sol_ct, meanv)
+        avgTime = a_Time(sol_ct)
+
+        print("\tMean: "+str(meanv))
+        print("\tMax: "+str(maxv))
+        print("\tMin: "+str(minv))
+        print("\tAvgTime: "+str(avgTime))
+        print("\tDesv: "+str(desv))    
+
+    elif (search == 'A'):
+        print("## Simulated Annealing ##")
+        ##############################################
+        # SIMULATED ANNEALING
+
+        temp = 50000
+        A = 200
+        K = 2000
+        maxIWoImpSA = 10
+        neighSize = nodes
+
+        # SA execution
+        start = time.time()
+        sol = annealing(maxIWoImpSA, g, initial_solution._partitionA, initial_solution._partitionB, K, A, temp, initial_solution._value, neighSize)
+        end = time.time()
+
+        elapsed = end - start
+        print('elapsed time: '+str(elapsed)+'\n')
+    
+    else:
+        print('T: TABU | A: Simulated Annealing')
 
 if __name__ == "__main__":
     main(sys.argv)
