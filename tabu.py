@@ -3,6 +3,7 @@ from numpy import inf
 from random import randint, uniform, shuffle
 from graph import Graph
 from copy import deepcopy, copy
+from math import exp
 
 from local_search import totalCutValue
 from solution import Solution
@@ -338,17 +339,18 @@ def generateNeighborSA(graph, s1,s2, sum, neighSize):
 # @param [graph] Graph
 # @param [s1] Set of nodes
 # @param [s2] Set of nodes
-# @param [k] Boolean : Use random generation
-# @param [a] Neighborhood Size
-# @param [temp] Maximun tabu size
-# @param [sum] Minimun tabu iterations
-# @param [neighSize] Maximun tabu iterations
+# @param [k] number of iterations 
+# @param [a] maximum iterations without finding a better neighbour
+# @param [temp] temperature
+# @param [initCut] initial cut value
+# @param [neighSize] Maximum iterations
 
 def annealing(maxIWoImp, graph, s1, s2, K, A, temp, initCut, neighSize):
     """ Simulated Annealing metaheuristic"""
     c,k,a, = 0,0,0
     u1 = copy(s1)
     u2 = copy(s2)
+
     bestCut = initCut
     newCut = initCut
 
@@ -358,16 +360,23 @@ def annealing(maxIWoImp, graph, s1, s2, K, A, temp, initCut, neighSize):
 
     # while best cut value keeps improving in less iterations than maxIWoImp
     while c < maxIWoImp:
-        startingSum = newCut
+        # best cut so far is stored
+        # startingSum = newCut
+        startingSum = bestCut
 
         while k < K and a < A:
             # store previous neighbour
             t1 = copy(s1)
             t2 = copy(s2)
-            prevCut = newCut
+            prevCut = copy(newCut)
 
             # generate new neighbour
             s1,s2,newCut = generateNeighborSA(graph, s1, s2, prevCut, neighSize)
+
+            print (str((s1,s2) == (t1,t2)))
+
+            print('newCut: ' + str(newCut))
+            print('prevCut: ' + str(prevCut))
 
             # if new solution is better that the previous one
             if newCut > prevCut:
@@ -376,28 +385,38 @@ def annealing(maxIWoImp, graph, s1, s2, K, A, temp, initCut, neighSize):
                     u1 = copy(s1)
                     u2 = copy(s2)
                     bestCut = newCut
-                a = a + 1
+                # a = a + 1    
             else:
                 delta = uniform(0, 1)
                 calc = ((newCut - prevCut)/temp)
-                if delta > calc:
+                print('temp: ' + str(temp))
+
+                print('delta: ' + str(delta))
+                print('calc: ' + str(calc))
+
+                # if delta bigger than calculation, do not accept worse solution
+                # return to previous solution (t1, t2)
+                if delta >= calc:
+                # if delta > calc:    
                     s1 = copy(t1)
                     s2 = copy(t2)
                     newCut = prevCut
                     a = a + 1
+
             k = k + 1
 
         temp = alpha*temp
         K = beta*K
         k,a = 0,0
 
-        endingCut = newCut
-
-        if endingCut <= startingSum:
+        # if solution found in cycle made no improvement over the starting sum,
+        # c is increased 
+        if newCut <= startingSum:
             c = c + 1
         else:
             c = 0 
 
     finalCut = totalCutValue(graph, u1, u2)
-    print('Best cut found: '+str(bestCut))
+    print('Final cut found: '+str(finalCut))
+    # print('Best cut found: '+str(bestCut))
     return u1,u2
