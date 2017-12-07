@@ -211,10 +211,8 @@ def main(argv):
         # graph building
         g = AntGraph(connections, tMax)
 
-        ant_cut(g, nodes, itNum, antNum, alpha, beta)
-
         # search execution
-        # sol = annealing(maxIWoImpSA, g, initial_solution._partitionA, initial_solution._partitionB, K, A, temp, initial_solution._value, neighSize)
+        ant_cut(g, nodes, itNum, antNum, alpha, beta)
 
         end = time.time()
 
