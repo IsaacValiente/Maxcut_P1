@@ -171,7 +171,9 @@ def update_pheromone(graph, solutions, it, p, Q, best, better):
 
             calc = (1 - p) * edge[2] + deltaP
             graph._graph[vertex][i] = (edge[0], edge[1], calc)
-    print('p: ' + str(p))
+
+    # check print of p constant
+    # print('p: ' + str(p))
 
 
 ###################################################################
@@ -211,8 +213,8 @@ def ant_cut(graph, vertexNum, itNum, antNum, alpha, beta):
 
     i = 0
     while i < itNum:
-        # check print
-        print('vuelta: ' + str(i))
+        # check print for iteration number
+        # print('vuelta: ' + str(i))
         antCount = 0
         while antCount < antNum:
             # reset cut vectors, candidate set, delta and probabilities
@@ -252,8 +254,8 @@ def ant_cut(graph, vertexNum, itNum, antNum, alpha, beta):
         # local search optimization for each solution
         best = ([], set(), set(), -inf)
         for sol in solutions:
-            # print to check how solutions change
-            print sol[3]
+            # check print to observe how the algorithm behaves
+            # print sol[3]
             if sol[3] > 0:
                 newSolution = local_search(graph, vertexNum, sol)
                 cutValue = newSolution[3]
@@ -261,24 +263,28 @@ def ant_cut(graph, vertexNum, itNum, antNum, alpha, beta):
                     best = copy(newSolution)
                     if cutValue > better[3]:
                         better = copy(newSolution)
+
+            # algorithm efficiency decays to zero, return
             else:
-                # print to check iteration number, etc
-                print better
-                print('it: ' + str(itNum))
-                print('ants: ' + str(antNum))
-                print('p: ' + str(p))
+                # check print to visualize iteration number, etc
+                # print better
+                # print('it: ' + str(itNum))
+                # print('ants: ' + str(antNum))
+                # print('p: ' + str(p))
                 return
 
-        print better[3]
+        # check print 
+        # print better[3]
 
         # global pheromone update
         solutions.append(better)
 
         Q = 100
-        # different p values
-        #p = 0.00009
-        #p = 0.005
-        p = 0.00002
+        # different p values used
+        # p = 0.00009
+        p = 0.005
+        # p = 0.00002
+        # p = 0.009
         update_pheromone(graph, solutions, i, p, Q, best[3], better[3])
 
         # solutions list reset
@@ -286,7 +292,9 @@ def ant_cut(graph, vertexNum, itNum, antNum, alpha, beta):
 
         i = i + 1
 
+    # solution print
+    print('\nsolution: \n(<cut vectors>, <partition A>, <partition B>, <cut value>)')
     print better
-    print('it: ' + str(itNum))
-    print('ants: ' + str(antNum))
-    print('p: ' + str(p))
+    print('\nmax iteration number: ' + str(itNum))
+    print('number of ants: ' + str(antNum))
+    print('p factor: ' + str(p))
