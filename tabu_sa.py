@@ -165,13 +165,13 @@ def TabuSearch(maxIWoImp, graph, s1, s2, neighSize, minTIter, maxTIter, percenta
     return sol
 
 ###################################################################
-# tabuTotal
+# CompTabuTotal
 # @param [graph] node
-# @param [A] Tabu List
-# @param [B] Tabu List
-# @param [sum] Tabu List
-# @param [n1] Tabu List
-# @param [n2] Tabu List
+# @param [A] Set A
+# @param [B] Set B
+# @param [sum] Cut total
+# @param [n1] node1
+# @param [n2] node2
 
 def CompTabuTotal(graph, A, B, sum, n1, n2):
     wn1a = 0

@@ -7,7 +7,14 @@ from graph import Graph
 from solution import Solution
 from ssMethods import diversification, improvement, combination, generateSubSet, getMinRS, getMax
 
+
+###################################################################
+# scatterSearch
+# @param [graph] Graph
+# @param [alpha] Value used in diversification
+# @param [b] Size of refSet
 def scatterSearch(graph, alpha, b):
+	""" Scatter search metaheuristic for MaxCut"""
 
 	#Generate P
 	P = []

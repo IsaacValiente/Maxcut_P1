@@ -5,7 +5,7 @@ import copy, random, math
 ###################################################################
 # generate_initial
 # @param [graph] Graph
-# @param [random] Boolean : Use random generation
+# @param [random] Boolean : True for random generation false for greedy
 def generate_initial(graph, rand=False):
     """ Generate initial solution """
     partitionA = set()
@@ -53,6 +53,10 @@ def weight(graph,A,B,v):
 
 ###################################################################
 # totalCutValue
+# weight
+# @param [graph] Graph
+# @param [A] Set of nodes : partitionA
+# @param [B] Set of nodes : partitionB
 def totalCutValue(graph, A, B):
     """ Get the total value of the Cut """
     cutWeight = 0
@@ -61,22 +65,65 @@ def totalCutValue(graph, A, B):
             if graph.is_connected(a,b):
                 cutWeight = cutWeight + graph.weight(a,b)
     return cutWeight
-  
-  
-def cut_value(graph, solution, candidate):
-    """ Calculate weight of the solution if a candidate is added to the cut """
-    
-    # current weight of cut solution
-    cutWeight = solution._value
 
-    connections = graph._graph[candidate]
-    partitionA = solution._partitionA
-    
-    for connection in connections:
-        # print connection[0]
-        if (connection[0]) in (partitionA):
-            cutWeight -= connection[1]    
-        else:
-            cutWeight += connection[1]
-    
+############################################################################
+# totalCutValue
+# @param [graph] Graph
+# @param [S] Set of nodes : partitionA
+# @param [Sp] Set of nodes : partitionB
+def totalCutValue(graph, S, Sp):
+    """ Get the total value of the Cut """
+    cutWeight = 0
+    for node in S:
+        connect_node = graph._graph[node]
+        for c in connect_node:
+            if c[0] in Sp:
+                cutWeight = cutWeight + c[1]
     return cutWeight
+  
+    
+############################################################################
+# cut_value : Calculate weight of the solution if a candidate is added to the cut
+# @param [graph] Graph
+# @param [random] Boolean : Use random generation
+def cut_value(graph, S, SP, total, node, check_node_origin):
+    wn = 0
+    wnS = 0
+    wnSp = 0
+
+    connect_n = graph._graph[node]
+    for c in connect_n:
+        if c[0] in S:
+            wnS += c[1]
+        else:
+            wnSp += c[1]
+
+    wn = wnSp - wnS
+    if check_node_origin and (node in S):
+        wn = wnS -wnSp
+
+    return total+wn
+
+
+############################################################################
+
+########################IMPROVEMENT METHOD##################################
+
+############################################################################
+# FirstBest
+# @param [graph] Graph
+# @param [S] Set of nodes
+# @param [Sp] Set of nodes
+# @param [cut_v] Neighborhood Size
+def firstBest(graph, S,Sp, cut_v):
+    """  """
+    sample = graph._graph.keys()
+    shuffle(sample)
+
+    for node in sample:
+        total = cut_value(graph, S, Sp, cut_v, node, True)
+        if total > cut_v:
+            swap(node,S,Sp)
+            return total        
+    return cut_v
+    

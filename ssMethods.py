@@ -13,6 +13,9 @@ from solution import Solution
 
 ############################################################################
 # totalCutValue
+# @param [graph] Graph
+# @param [S] Set of nodes
+# @param [Sp] Set of nodes
 def totalCutValue(graph, S, Sp):
     """ Get the total value of the Cut """
     cutWeight = 0
@@ -29,7 +32,7 @@ def totalCutValue(graph, S, Sp):
 # @param [s1] Partition1
 # @param [s2] Partition2
 def swap(node,s1,s2):
-    """ Swap partition of node"""
+    """ Swap node of partition """
     if node in s1:
         s1.remove(node)
         s2.add(node) 
@@ -42,10 +45,10 @@ def swap(node,s1,s2):
 ######################DIVERSIFICATION METHOD################################
 
 ############################################################################
-# diffSigmas : Calculate the difference between sigma and sigmap
-# @param [graph] Graph
-# @param [random] Boolean : Use random generation
+# minDiff
+# @param [diff]
 def minDiff(diff):
+    """ Minimun Diference """
     min_v = inf
 
     for d in diff:
@@ -58,10 +61,10 @@ def minDiff(diff):
     return min_v
 
 ############################################################################
-# diffSigmas : Calculate the difference between sigma and sigmap
-# @param [graph] Graph
-# @param [random] Boolean : Use random generation
+# maxDiff
+# @param [diff]
 def maxDiff(diff):
+    """ Maximun diference """
     max_v = -inf
 
     for d in diff:
@@ -74,10 +77,15 @@ def maxDiff(diff):
     return max_v  
       
 ############################################################################
-# diffSigmas : Calculate the difference between sigma and sigmap
+# cut_value 
 # @param [graph] Graph
-# @param [random] Boolean : Use random generation
+# @param [S] Set of nodes
+# @param [SP] Set of nodes
+# @param [total] Cut value
+# @param [node] Node
+# @param [check_node_origin] Check the origin of the node
 def cut_value(graph, S, SP, total, node, check_node_origin):
+    """Calculate cut for candidate move """
     wn = 0
     wnS = 0
     wnSp = 0
@@ -98,12 +106,13 @@ def cut_value(graph, S, SP, total, node, check_node_origin):
     return total+wn
 
 ############################################################################
-# diffSigmas : Calculate the difference between sigma and sigmap
+# diffSigmas
 # @param [graph] Graph
 # @param [node] Graph
 # @param [S] Graph
 # @param [Sp] Graph
 def diffSigmas(graph, node, S, Sp):
+    """Calculate the difference between sigma and sigmap"""
     sumSigma = 0
     sumSigmaP = 0
 
@@ -120,8 +129,9 @@ def diffSigmas(graph, node, S, Sp):
 ############################################################################
 # Diversification Generation method C2
 # @param [graph] Graph
-# @param [random] Boolean : Use random generation
+# @param [alpha]
 def diversification(graph, alpha):
+    """Diversification method """
 
     #Initialize
     nodes = (graph._graph.keys())
@@ -166,8 +176,7 @@ def diversification(graph, alpha):
 # @param [Sp] Set of nodes
 # @param [cut_v] Neighborhood Size
 def firstBest(graph, S,Sp, cut_v):
-    """  """
-    act = graph.first()
+    """  Local search """
     sample = graph._graph.keys()
     shuffle(sample)
 
@@ -182,9 +191,7 @@ def firstBest(graph, S,Sp, cut_v):
 ############################################################################
 # Improvement method
 # @param [graph] Graph
-# @param [S] Set of nodes
-# @param [Sp] Set of nodes
-# @param [cut_v] Neighborhood Size
+# @param [solution] A solution
 
 def improvement(graph, solution):
     """  Improvement method using first best"""
@@ -207,9 +214,9 @@ def improvement(graph, solution):
 ############################################################################
 # sigmas : 
 # @param [graph] Graph
-# @param [node] Graph
-# @param [S] Graph
-# @param [Sp] Graph
+# @param [node] Node
+# @param [S] Set of nodes
+# @param [Sp] Set of nodes
 def sigmas(graph, node, S, Sp):
     sumSigma = 0
     sumSigmaP = 0
@@ -227,7 +234,7 @@ def sigmas(graph, node, S, Sp):
 ############################################################################
 # Combination method
 # @param [graph] Graph
-# @param [subSet] set containing two solutions
+# @param [subSet] pair containing two solutions
 
 def combination(graph, subSet):
     """  Combination method CB2"""
@@ -278,7 +285,8 @@ def combination(graph, subSet):
 
 ############################################################################
 # Generate SubSet
-# @param [refSet] Graph
+# @param [refSet] Reference set
+# @param [b] Size of reference set
 
 def generateSubSet(refSet, b):
     """  Generate SubSet """
@@ -297,8 +305,8 @@ def generateSubSet(refSet, b):
 
 ############################################################################
 # getMinRS
-# @param [refSet] Graph
-# @param [imp_sol] Set of nodes
+# @param [refSet] Reference set
+# @param [b] Size of reference set
 
 def getMinRS(refSet, b):  
     """  Position and value of min value"""          
@@ -311,8 +319,8 @@ def getMinRS(refSet, b):
 
 ############################################################################
 # getMaxRS
-# @param [refSet] Graph
-# @param [imp_sol] Set of nodes
+# @param [refSet] Reference set
+# @param [b] Size of reference set
 
 def getMax(refSet, b):  
     """  Return best solution in refSet"""          

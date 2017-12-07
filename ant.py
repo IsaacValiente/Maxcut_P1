@@ -6,13 +6,13 @@ from collections import defaultdict
 from graph import Graph
 from solution import Solution
 from local_search import weight, totalCutValue
-from tabu import swap, calculateMovement
+from tabu_sa import swap, calculateMovement
 
 
 ###################################################################
 # switch_vertex
-# @param 
-
+# @param [vertex]
+# @param [cutVectors]
 def switch_vertex(vertex, cutVectors):
     """ Switch given vertex's cut vector """
 
@@ -21,7 +21,12 @@ def switch_vertex(vertex, cutVectors):
 
 ###################################################################
 # update_deltas
-# @param 
+# @param [graph]
+# @param [vertex]
+# @param [cutVectors]
+# @param [deltaFs]
+# @param [alpha]
+# @param [beta]
 
 def update_deltas(graph, vertex, cutVectors, deltaFs, alpha, beta):
     """ Update delta value for vertices given """
@@ -46,7 +51,10 @@ def update_deltas(graph, vertex, cutVectors, deltaFs, alpha, beta):
 
 ###################################################################
 # calc_deltas
-# @param 
+# @param [graph]
+# @param [cutVectors]
+# @param [deltaFs]
+# @param [beta]
 
 def calc_deltas(graph, cutVectors, deltaFs, alpha, beta):
     """ Calculate delta value for each vertex """
@@ -71,7 +79,10 @@ def calc_deltas(graph, cutVectors, deltaFs, alpha, beta):
 
 ###################################################################
 # update_prob
-# @param 
+# @param [vertexNum]
+# @param [deltaFs]
+# @param [candidateSet]
+# @param [vertexProbs]
 
 def update_probs(vertexNum, deltaFs, candidateSet, vertexProbs):
     """ Update choose probability for all vertices """
@@ -96,7 +107,9 @@ def update_probs(vertexNum, deltaFs, candidateSet, vertexProbs):
 
 ###################################################################
 # update_candidates
-# @param 
+# @param [updatedVertices]
+# @param [deltaFs]
+# @param [candidateSet]
 
 def update_candidates(updatedVertices, deltaFs, candidateSet):
     """ Update candidate set according to updated deltas """
@@ -111,7 +124,9 @@ def update_candidates(updatedVertices, deltaFs, candidateSet):
 
 ###################################################################
 # local_search
-# @param 
+# @param [graph]
+# @param [vertexNum]
+# @param [solution]
 
 def local_search(graph, vertexNum, solution):
     """ Local search strategy """
@@ -145,8 +160,13 @@ def local_search(graph, vertexNum, solution):
 
 ###################################################################
 # update_pheromone
-# @param 
-
+# @param [graph]
+# @param [solutions]
+# @param [it]
+# @param [p]
+# @param [Q]
+# @param [best]
+# @param [better]
 def update_pheromone(graph, solutions, it, p, Q, best, better):
     """ Global pheromone update """
 
@@ -176,7 +196,7 @@ def update_pheromone(graph, solutions, it, p, Q, best, better):
 
 ###################################################################
 # print_pheromone
-# @param 
+# @param [graph]
 
 def print_pheromone(graph):
     """  """
@@ -188,7 +208,12 @@ def print_pheromone(graph):
 
 ###################################################################
 # ant_cut
-# @param 
+# @param [graph]
+# @param [vertexNum]
+# @param [itNum]
+# @param [antNum]
+# @param [alpha]
+# @param [beta]
 
 def ant_cut(graph, vertexNum, itNum, antNum, alpha, beta):
     """ Ant cut """
