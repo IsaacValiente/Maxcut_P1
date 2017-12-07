@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from graph import Graph
 import sys
-from tabu import TabuSearch, CompTabuSearch, annealing
-from local_search import generate_initial, totalCutValue
 import time
 from numpy import inf
 from math import pow, sqrt
-
+from graph import Graph
+from antgraph import AntGraph
+from tabu import TabuSearch, CompTabuSearch, annealing
+from local_search import generate_initial, totalCutValue
+from ant import ant_cut
 
 # mean
 def a_Time(xsolution):
@@ -89,13 +90,16 @@ def main(argv):
     search = sys.argv[2]
     print("\n################# "+problem+" #################\n")
     nodes, opt_sol, connections = readDataFile("set1/"+problem)
-    g = Graph(connections)
-    initial_solution = generate_initial(g,False)
+    # g = Graph(connections)
+    # initial_solution = generate_initial(g,False)
 
     if (search == 'T'):
         print("## TABU ##")
         ##############################################
         # TABU
+
+        g = Graph(connections, None)
+        initial_solution = generate_initial(g,False)
 
         maxIWoImp = 5000
         neighSize = nodes
@@ -167,6 +171,9 @@ def main(argv):
         ##############################################
         # SIMULATED ANNEALING
 
+        g = Graph(connections, None)
+        initial_solution = generate_initial(g,False)
+
         temp = 50000
         A = 200
         K = 2000
@@ -181,8 +188,39 @@ def main(argv):
         elapsed = end - start
         print('elapsed time: '+str(elapsed)+'\n')
     
+    elif (search == 'Ant'):
+        print("## Ant Colony ##")
+        ##############################################
+        # ANT COLONY
+
+        # pheromone max and min value
+        tMax = sys.argv[3]
+        tMin = sys.argv[4]
+
+        # alpha and beta parameters
+        alpha = 5
+        beta = 1
+
+        # iteration and ant number
+        itNum = 1000
+        antNum = 3
+
+        ## Ant Colony execution 
+        start = time.time()
+        
+        # graph building
+        g = AntGraph(connections, tMax)
+
+        # search execution
+        ant_cut(g, nodes, itNum, antNum, alpha, beta)
+
+        end = time.time()
+
+        elapsed = end - start
+        print('elapsed time: '+str(elapsed)+'\n')
+
     else:
-        print('T: TABU | A: Simulated Annealing')
+        print('T: TABU | A: Simulated Annealing | Ant: Ant Colony')
 
 if __name__ == "__main__":
     main(sys.argv)
