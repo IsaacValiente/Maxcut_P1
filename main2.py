@@ -73,6 +73,7 @@ def main(argv):
     #print '-- graph'
     print("nodes: "+str(nodes))
     print("optimal solution: "+str(opt_sol))
+    nodes, opt_sol, connections = readDataFile("set1/g1.rud")
     g = Graph(connections)
 
     # initial solutions list

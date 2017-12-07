@@ -1,0 +1,28 @@
+################# g51.rud #################
+scatterSearch
+scatterSearch
+scatterSearch
+scatterSearch
+scatterSearch
+##### ScatterSearch #####
+b = 10
+alpha = 0.25
+	Mean: 3778
+	Max: 3786
+	Min: 3769
+	AvgTime: 83.9376057625
+	Desv: 6.98569967863
+################# g51.rud #################
+scatterSearch
+scatterSearch
+scatterSearch
+scatterSearch
+scatterSearch
+##### ScatterSearch #####
+b = 10
+alpha = 0.5
+	Mean: 3758
+	Max: 3765
+	Min: 3754
+	AvgTime: 71.3514957905
+	Desv: 4.04969134626

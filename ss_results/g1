@@ -1,0 +1,16 @@
+##### ScatterSearch #####
+b = 10
+alpha = 0.25
+	Mean: 11579
+	Max: 11623
+	Min: 11560
+	AvgTime: 536.778612995
+	Desv: 23.199137915
+##### ScatterSearch #####
+b = 10
+alpha = 0.5
+	Mean: 11565
+	Max: 11575
+	Min: 11550
+	AvgTime: 276.364394045
+	Desv: 8.83176086633

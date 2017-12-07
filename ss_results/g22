@@ -1,0 +1,30 @@
+################# g22.rud #################
+scatterSearch
+scatterSearch
+scatterSearch
+scatterSearch
+scatterSearch
+##### ScatterSearch #####
+b = 10
+alpha = 0.5
+	Mean: 13182
+	Max: 13204
+	Min: 13160
+	AvgTime: 1168.53736258
+	Desv: 14.1844985812
+
+
+################# g22.rud #################
+scatterSearch
+scatterSearch
+scatterSearch
+scatterSearch
+scatterSearch
+##### ScatterSearch #####
+b = 10
+alpha = 0.25
+	Mean: 13197
+	Max: 13225
+	Min: 13184
+	AvgTime: 1136.40365019
+	Desv: 17.0880074906

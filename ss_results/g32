@@ -1,0 +1,18 @@
+##### ScatterSearch #####
+b = 10
+alpha = 0.25
+	Mean: 1194
+	Max: 1206
+	Min: 1184
+	AvgTime: 351.808970356
+	Desv: 7.26636084983
+
+################# g32.rud #################
+##### ScatterSearch #####
+b = 10
+alpha = 0.5
+	Mean: 1148
+	Max: 1154
+	Min: 1144
+	AvgTime: 143.496950006
+	Desv: 3.22490309932
