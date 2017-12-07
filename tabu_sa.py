@@ -373,10 +373,10 @@ def annealing(maxIWoImp, graph, s1, s2, K, A, temp, initCut, neighSize):
             # generate new neighbour
             s1,s2,newCut = generateNeighborSA(graph, s1, s2, prevCut, neighSize)
 
-            print (str((s1,s2) == (t1,t2)))
+            # print (str((s1,s2) == (t1,t2)))
 
-            print('newCut: ' + str(newCut))
-            print('prevCut: ' + str(prevCut))
+            # print('newCut: ' + str(newCut))
+            # print('prevCut: ' + str(prevCut))
 
             # if new solution is better that the previous one
             if newCut > prevCut:
@@ -389,10 +389,10 @@ def annealing(maxIWoImp, graph, s1, s2, K, A, temp, initCut, neighSize):
             else:
                 delta = uniform(0, 1)
                 calc = ((newCut - prevCut)/temp)
-                print('temp: ' + str(temp))
+                # print('temp: ' + str(temp))
 
-                print('delta: ' + str(delta))
-                print('calc: ' + str(calc))
+                # print('delta: ' + str(delta))
+                # print('calc: ' + str(calc))
 
                 # if delta bigger than calculation, do not accept worse solution
                 # return to previous solution (t1, t2)
