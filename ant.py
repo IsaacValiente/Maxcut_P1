@@ -291,11 +291,12 @@ def ant_cut(graph, vertexNum, itNum, antNum, alpha, beta):
 
             # algorithm efficiency decays to zero, return
             else:
-                # check print to visualize iteration number, etc
-                # print better
-                # print('it: ' + str(itNum))
-                # print('ants: ' + str(antNum))
-                # print('p: ' + str(p))
+                # results print
+                print('\nsolution: \n(<cut vectors>, <partition A>, <partition B>, <cut value>)')
+                print better
+                print('\nmax iteration number: ' + str(itNum))
+                print('number of ants: ' + str(antNum))
+                print('p factor: ' + str(p))
                 return
 
         # check print 
@@ -306,8 +307,8 @@ def ant_cut(graph, vertexNum, itNum, antNum, alpha, beta):
 
         Q = 100
         # different p values used
-        # p = 0.00009
-        p = 0.005
+        p = 0.00009
+        #p = 0.005
         # p = 0.00002
         # p = 0.009
         update_pheromone(graph, solutions, i, p, Q, best[3], better[3])
