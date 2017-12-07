@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from graph import Graph
 import sys
-from tabu import TabuSearch, CompTabuSearch
+from tabu import TabuSearch, CompTabuSearch, annealing
 from local_search import generate_initial, totalCutValue
 import time
 from numpy import inf
@@ -86,76 +86,103 @@ def readDataFile(filename):
 
 def main(argv):
     problem = sys.argv[1]
-    print("################# "+problem+" #################")
+    search = sys.argv[2]
+    print("\n################# "+problem+" #################\n")
     nodes, opt_sol, connections = readDataFile("set1/"+problem)
     g = Graph(connections)
     initial_solution = generate_initial(g,False)
 
-    maxIWoImp = 5000
-    neighSize = nodes
-    minTIter = 25
-    maxTIter = 100
-    start_time = time.time()
-    sol_fb = []
-    sol_porc = []
-    sol_ct = []
-    sol_bb = (TabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter, 100, False),time.time() - start_time)
-    for i in range(0,10):
+    if (search == 'T'):
+        print("## TABU ##")
+        ##############################################
+        # TABU
+
+        maxIWoImp = 5000
+        neighSize = nodes
+        minTIter = 25
+        maxTIter = 100
         start_time = time.time()
-        sol_fb.append((TabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter, 100, True),time.time() - start_time))
-        start_time = time.time()
-        sol_porc.append((TabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter, 70, False),time.time() - start_time))
-        start_time = time.time()
-        sol_ct.append((CompTabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter),time.time() - start_time))        
+        sol_fb = []
+        sol_porc = []
+        sol_ct = []
+        sol_bb = (TabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter, 100, False),time.time() - start_time)
+        for i in range(0,10):
+            start_time = time.time()
+            sol_fb.append((TabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter, 100, True),time.time() - start_time))
+            start_time = time.time()
+            sol_porc.append((TabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter, 70, False),time.time() - start_time))
+            start_time = time.time()
+            sol_ct.append((CompTabuSearch(maxIWoImp, g, initial_solution._partitionA, initial_solution._partitionB, neighSize, minTIter, maxTIter),time.time() - start_time))        
+        
+
+        print("##### Best #####")
+
+        print("\tValue: "+str(sol_bb[0]._value))
+        print("\tTime: "+str(sol_bb[1]))
+
+        print("##### FirstBest #####")
+
+        meanv = mean(sol_fb)
+        maxv = max(sol_fb) 
+        minv = min(sol_fb)
+        desv = desvStd(sol_fb, meanv)
+        avgTime = a_Time(sol_fb)
+
+        print("\tMean: "+str(meanv))
+        print("\tMax: "+str(maxv))
+        print("\tMin: "+str(minv))
+        print("\tAvgTime: "+str(avgTime))
+        print("\tDesv: "+str(desv))
+
+        print("##### 70% #####")
+
+        meanv = mean(sol_porc)
+        maxv = max(sol_porc) 
+        minv = min(sol_porc)
+        desv = desvStd(sol_porc, meanv)
+        avgTime = a_Time(sol_porc)
+
+        print("\tMean: "+str(meanv))
+        print("\tMax: "+str(maxv))
+        print("\tMin: "+str(minv))
+        print("\tAvgTime: "+str(avgTime))
+        print("\tDesv: "+str(desv))    
+
+        print("##### CompetitiveTabu #####")
+
+        meanv = mean(sol_ct)
+        maxv = max(sol_ct) 
+        minv = min(sol_ct)
+        desv = desvStd(sol_ct, meanv)
+        avgTime = a_Time(sol_ct)
+
+        print("\tMean: "+str(meanv))
+        print("\tMax: "+str(maxv))
+        print("\tMin: "+str(minv))
+        print("\tAvgTime: "+str(avgTime))
+        print("\tDesv: "+str(desv))    
+
+    elif (search == 'A'):
+        print("## Simulated Annealing ##")
+        ##############################################
+        # SIMULATED ANNEALING
+
+        temp = 50000
+        A = 200
+        K = 2000
+        maxIWoImpSA = 10
+        neighSize = nodes
+
+        # SA execution
+        start = time.time()
+        sol = annealing(maxIWoImpSA, g, initial_solution._partitionA, initial_solution._partitionB, K, A, temp, initial_solution._value, neighSize)
+        end = time.time()
+
+        elapsed = end - start
+        print('elapsed time: '+str(elapsed)+'\n')
     
-
-    print("##### Best #####")
-
-    print("\tValue: "+str(sol_bb[0]._value))
-    print("\tTime: "+str(sol_bb[1]))
-
-    print("##### FirstBest #####")
-
-    meanv = mean(sol_fb)
-    maxv = max(sol_fb) 
-    minv = min(sol_fb)
-    desv = desvStd(sol_fb, meanv)
-    avgTime = a_Time(sol_fb)
-
-    print("\tMean: "+str(meanv))
-    print("\tMax: "+str(maxv))
-    print("\tMin: "+str(minv))
-    print("\tAvgTime: "+str(avgTime))
-    print("\tDesv: "+str(desv))
-
-    print("##### 70% #####")
-
-    meanv = mean(sol_porc)
-    maxv = max(sol_porc) 
-    minv = min(sol_porc)
-    desv = desvStd(sol_porc, meanv)
-    avgTime = a_Time(sol_porc)
-
-    print("\tMean: "+str(meanv))
-    print("\tMax: "+str(maxv))
-    print("\tMin: "+str(minv))
-    print("\tAvgTime: "+str(avgTime))
-    print("\tDesv: "+str(desv))    
-
-    print("##### CompetitiveTabu #####")
-
-    meanv = mean(sol_ct)
-    maxv = max(sol_ct) 
-    minv = min(sol_ct)
-    desv = desvStd(sol_ct, meanv)
-    avgTime = a_Time(sol_ct)
-
-    print("\tMean: "+str(meanv))
-    print("\tMax: "+str(maxv))
-    print("\tMin: "+str(minv))
-    print("\tAvgTime: "+str(avgTime))
-    print("\tDesv: "+str(desv))    
-
+    else:
+        print('T: TABU | A: Simulated Annealing')
 
 if __name__ == "__main__":
     main(sys.argv)
